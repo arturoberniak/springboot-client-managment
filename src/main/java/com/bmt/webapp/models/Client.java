@@ -4,9 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "clients")
+@Data
 public class Client {
 
 	@Id
@@ -26,60 +28,4 @@ public class Client {
 	
 	@OneToMany(mappedBy="client", cascade = CascadeType.ALL)
 	private List<Invoice> invoices;
-	
-	
-	public List<Invoice> getInvoices() {
-		return invoices;
-	}
-	public void setInvoices(List<Invoice> invoices) {
-		this.invoices = invoices;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getPhone() {
-		return phone;
-	}
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
 }

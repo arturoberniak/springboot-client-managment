@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Sort;
@@ -31,11 +33,11 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/clients")
+@RequiredArgsConstructor
 public class ClientsController {
 
-	@Autowired
-	private ClientRepository clientRepo;
-	
+	private final ClientRepository clientRepo;
+
 	
 	@GetMapping({"", "/"})
 	public String getClients(Model model) {
@@ -196,105 +198,5 @@ public class ClientsController {
 		
 		return "clients/details";
 	}
-	
-	
-	
-	@PostMapping("/details")
-	public String addInvoice(@RequestParam int id, @RequestParam MultipartFile file) {
-		
-		try {
-			
-			if (file == null) {
-    			return "redirect:/clients/details?id=" + id;
-    		}
-    		
-    		var client = clientRepo.findById(id).orElse(null);
-    		if (client == null) {
-    			return "redirect:/clients";
-    		}
-    		
 
-        	Date createdAt = new Date();
-        	String fileName = file.getOriginalFilename();
-        	String extension = fileName.substring(fileName.lastIndexOf('.'));
-        	String storageFileName = createdAt.getTime() + extension;
-        	
-        	
-        	String uploadDir = "storage/invoices/";
-    		Path uploadPath = Paths.get(uploadDir);
-            
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-            
-            try (InputStream inputStream = file.getInputStream()) {
-				Files.copy(inputStream, Paths.get(uploadDir + storageFileName),
-					StandardCopyOption.REPLACE_EXISTING);
-			}
-            
-
-            var invoice = new Invoice();
-            invoice.setFileName(fileName);
-            invoice.setStorageFileName(storageFileName);
-            invoice.setCreatedAt(createdAt);
-            invoice.setClient(client);
-            
-            client.getInvoices().add(invoice);
-            clientRepo.save(client);
-			
-			
-		} catch (Exception ex) {
-	    	System.out.println("Exception: " + ex.getMessage());
-	    }
-		
-		return "redirect:/clients/details?id=" + id;
-	}
-	
-	
-	@Autowired
-	private InvoiceRepository invoiceRepo;
-	
-	@GetMapping("/invoices")
-	public ResponseEntity<Object> getInvoice(@RequestParam int invoiceId) {
-		
-		try {
-			Invoice invoice = invoiceRepo.findById(invoiceId).get();
-			
-			File file = new File("storage/invoices/" + invoice.getStorageFileName());
-			InputStreamResource resource = new InputStreamResource(
-					new java.io.FileInputStream(file));
-
-		    return ResponseEntity.ok()
-		            .header(HttpHeaders.CONTENT_DISPOSITION, 
-		            		"attachment; filename=\"" + invoice.getFileName() + "\"")
-		            .contentLength(file.length())
-		            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-		            .body(resource);
-		}
-		catch(Exception ex) {
-		}
-		
-		
-		
-		return ResponseEntity.notFound().build();
-	}
-	
-	
-	@GetMapping("/invoices/delete")
-	public String deleteInvoice(@RequestParam int clientId, @RequestParam int invoiceId) {
-		
-		try {
-			Invoice invoice = invoiceRepo.findById(invoiceId).get();
-
-    		Path filePath = Paths.get("storage/invoices/" + invoice.getStorageFileName());
-    		Files.delete(filePath);
-            
-
-    		invoiceRepo.delete(invoice);
-		}
-		catch(Exception ex) {
-		}
-		
-		return "redirect:/clients/details?id=" + clientId;
-	}
 }
