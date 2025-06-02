@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
 
+import com.bmt.webapp.mappers.ClientMapper;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ import jakarta.validation.Valid;
 public class ClientsController {
 
 	private final ClientRepository clientRepo;
+	private final ClientMapper clientMapper;
 
 	
 	@GetMapping({"", "/"})
@@ -73,16 +75,8 @@ public class ClientsController {
 		if (result.hasErrors()) {
     		return "clients/create";
     	}
-		
-		
-		Client client = new Client();
-    	client.setFirstName(clientDto.getFirstName());
-    	client.setLastName(clientDto.getLastName());
-    	client.setEmail(clientDto.getEmail());
-    	client.setPhone(clientDto.getPhone());
-    	client.setAddress(clientDto.getAddress());
-    	client.setStatus(clientDto.getStatus());
-    	client.setCreatedAt(new Date());
+
+		Client client = clientMapper.mapToClient(clientDto);
     	
     	clientRepo.save(client);
 		
@@ -97,14 +91,7 @@ public class ClientsController {
 			return "redirect:/clients";
 		}
 		
-		
-		ClientDto clientDto = new ClientDto();
-		clientDto.setFirstName(client.getFirstName());
-		clientDto.setLastName(client.getLastName());
-		clientDto.setEmail(client.getEmail());
-		clientDto.setPhone(client.getPhone());
-		clientDto.setAddress(client.getAddress());
-		clientDto.setStatus(client.getStatus());
+		ClientDto clientDto = clientMapper.mapToClientDto(client);
 		
 		model.addAttribute("client", client);
     	model.addAttribute("clientDto", clientDto);
@@ -133,15 +120,9 @@ public class ClientsController {
 		if (result.hasErrors()) {
     		return "clients/edit";
     	}
-		
 
-		client.setFirstName(clientDto.getFirstName());
-    	client.setLastName(clientDto.getLastName());
-    	client.setEmail(clientDto.getEmail());
-    	client.setPhone(clientDto.getPhone());
-    	client.setAddress(clientDto.getAddress());
-    	client.setStatus(clientDto.getStatus());
-    	
+
+		clientMapper.updateClientFromDto(clientDto, client);
     	
     	try {
     		clientRepo.save(client);
