@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clients Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  </head>
+  <body>
+    
+    <div class="container my-4">
+      <h1 class="text-center mb-3">List of Clients</h1>
+      <a class="btn btn-primary" href="/clients/create">New Client</a>
+      
+      
+      <table class="table">
+		<thead>
+		  <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Action</th>
+		  </tr>
+		</thead>
+		<tbody class="table-group-divider">
+		  <tr th:each="client : ${clients}">
+		      <td th:text="${client.id}"></td>
+		      <td th:text="@{${client.firstName} + ' ' + ${client.lastName}}"></td>
+		      <td th:text="${client.email}"></td>
+		      <td th:text="${client.phone}"></td>
+		      <td th:text="${client.address}"></td>
+		      
+		      <td>
+		        <span th:if='${client.status.equals("New")}' class="badge text-bg-primary" th:text="${client.status}"></span>
+		        <span th:if='${client.status.equals("Permanent")}' class="badge text-bg-warning" th:text="${client.status}"></span>
+		        <span th:if='${client.status.equals("Lead")}' class="badge text-bg-success" th:text="${client.status}"></span>
+		        <span th:if='${client.status.equals("Occasional")}' class="badge text-bg-info" th:text="${client.status}"></span>
+		        <span th:if='${client.status.equals("Inactive")}' class="badge text-bg-secondary" th:text="${client.status}"></span>
+		        
+		      </td>
+		      
+		      <td th:text="${client.createdAt.toString().substring(0, 10)}"></td>
+		      
+		      <td style="white-space:nowrap">
+	               <a class="btn btn-primary btn-sm" 
+	               		th:href="@{/clients/details(id=${client.id})}">
+	               		<i class="bi bi-search"></i>
+	               </a> 
+	               <a class="btn btn-primary btn-sm" 
+	               		th:href="@{/clients/edit(id=${client.id})}">
+	               		<i class="bi bi-pencil"></i>
+	               </a>
+	               <a class="btn btn-danger btn-sm" 
+	               		th:href="@{/clients/delete(id=${client.id})}"
+	               		onclick="return confirm('Are you sure?')">
+	               		<i class="bi bi-trash3"></i>
+	               </a>
+	          </td>
+		  </tr>
+		</tbody>
+	  </table>
+      
+    </div>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>
