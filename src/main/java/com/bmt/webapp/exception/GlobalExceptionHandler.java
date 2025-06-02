@@ -6,15 +6,19 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
-import java.util.NoSuchElementException;
-
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public String handleClientNotFound(NoSuchElementException ex) {
+    @ExceptionHandler(ClientNotFoundException.class)
+    public String handleClientNotFound(ClientNotFoundException ex) {
         log.warn("Client not found: {}", ex.getMessage());
+        return "redirect:/clients";
+    }
+
+    @ExceptionHandler(InvoiceNotFoundException.class)
+    public String handleClientNotFound(InvoiceNotFoundException ex) {
+        log.warn("Invoice not found: {}", ex.getMessage());
         return "redirect:/clients";
     }
 

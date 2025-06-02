@@ -11,21 +11,21 @@ import lombok.Data;
 @Data
 public class Client {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
-	
-	private String firstName;
-	private String lastName;
-	
-	@Column(unique = true, nullable = false)
-	private String email;
-	
-	private String phone;
-	private String address;
-	private String status;
-	private Date createdAt;
-	
-	@OneToMany(mappedBy="client", cascade = CascadeType.ALL)
-	private List<Invoice> invoices;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    private String firstName;
+    private String lastName;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    private String phone;
+    private String address;
+    private String status;
+    private Date createdAt;
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<Invoice> invoices;
 }

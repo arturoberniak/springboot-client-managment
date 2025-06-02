@@ -5,9 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeController {
-
-	@GetMapping("/")
-	public String home() {
-		return "redirect:/clients?sortBy=id&direction=desc";
-	}
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/clients?sortBy=id&direction=desc";
+    }
 }

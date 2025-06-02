@@ -9,7 +9,7 @@ import java.util.Date;
 @Component
 public class ClientMapper {
 
-    public ClientDto mapToClientDto(Client client){
+    public ClientDto mapToClientDto(Client client) {
         ClientDto clientDto = new ClientDto();
         clientDto.setFirstName(client.getFirstName());
         clientDto.setLastName(client.getLastName());
@@ -20,7 +20,7 @@ public class ClientMapper {
         return clientDto;
     }
 
-    public Client mapToClient(ClientDto clientDto){
+    public Client mapToClient(ClientDto clientDto) {
         Client client = new Client();
         client.setFirstName(clientDto.getFirstName());
         client.setLastName(clientDto.getLastName());

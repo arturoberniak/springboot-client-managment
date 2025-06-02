@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.NoSuchElementException;
 
+import com.bmt.webapp.exception.ClientNotFoundException;
 import com.bmt.webapp.mappers.ClientMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -95,7 +95,7 @@ public class ClientsController {
     public String editClient(Model model, @RequestParam int id) {
 
         Client client = clientRepo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Client not found with id " + id));
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with id " + id));
 
         ClientDto clientDto = clientMapper.mapToClientDto(client);
         model.addAttribute("client", client);
@@ -113,7 +113,7 @@ public class ClientsController {
             BindingResult result
     ) {
         Client client = clientRepo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Client not found with id " + id));
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with id " + id));
         model.addAttribute("client", client);
 
         if (clientRepo.findByEmail(clientDto.getEmail()) != null) {
@@ -138,7 +138,7 @@ public class ClientsController {
     public String deleteClient(@RequestParam int id) throws IOException {
 
         Client client = clientRepo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Client not found with id " + id));
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with id " + id));
 
         for (var invoice : client.getInvoices()) {
             Path filePath = Paths.get("storage/invoices/" + invoice.getStorageFileName());
@@ -154,7 +154,7 @@ public class ClientsController {
     public String getClient(Model model, @RequestParam int id) {
 
         Client client = clientRepo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Client not found with id " + id));
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with id " + id));
         model.addAttribute("client", client);
 
         return "clients/details";
