@@ -13,7 +13,7 @@ A simple CRM-style web application built with Spring Boot and Thymeleaf. It allo
 
 ## Technologies Used
 
-- Java 21+
+- Java 21
 - Spring Boot (Spring MVC, Spring Data JPA)
 - PostgreSQL
 - Thymeleaf (HTML templating engine)
